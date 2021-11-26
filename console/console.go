@@ -15,7 +15,7 @@ import (
 
 const dateFormat = `2006-01-02 15:04:05.999`
 
-var colorConsole ketty.Logger = new(Console)
+var colorConsole = NewConsole()
 
 func Info(format string, v ...interface{}) {
 	colorConsole.Info(format, v...)
