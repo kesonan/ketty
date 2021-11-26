@@ -28,6 +28,16 @@ func (b *Border) LineSplitter() LineSplitter {
 	return b.l
 }
 
+type NoneBorder struct{}
+
+func (b *NoneBorder) Corner() Corner {
+	return Corner{}
+}
+
+func (b *NoneBorder) LineSplitter() LineSplitter {
+	return LineSplitter{}
+}
+
 func WithLineStyle() Option {
 	return WithBorder("┌", "└", "─", "│")
 }
@@ -45,7 +55,9 @@ func WithPlusStyle() Option {
 }
 
 func DisableBorder() Option {
-	return WithCommonBorder("")
+	return func(f *Frame) {
+		f.border = &NoneBorder{}
+	}
 }
 
 func WithFivePointedStarStyle() Option {

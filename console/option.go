@@ -6,16 +6,12 @@ import (
 
 func WithTextOption(opt ...text.Option) Option {
 	return func(c *Console) {
-		c.once.Do(func() {
-			c.opt = opt
-		})
+		c.opt = opt
 	}
 }
 
 func WithOutputDir(file string) Option {
 	return func(c *Console) {
-		c.once.Do(func() {
-			c.output = file
-		})
+		c.output = file
 	}
 }

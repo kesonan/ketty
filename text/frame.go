@@ -49,16 +49,19 @@ func (f *Frame) draw() {
 		return
 	}
 	f.drawTopBorder()
-	f.newLine()
 	f.drawRows()
 	f.drawBottomBorder()
-	f.newLine()
 }
 
 func (f *Frame) drawTopBorder() {
+	switch f.border.(type) {
+	case *NoneBorder:
+		return
+	}
 	f.drawPrefix()
 	f.w.WriteString(f.border.Corner().leftTop)
 	f.drawSplitter()
+	f.newLine()
 }
 
 func (f *Frame) drawPrefix() {
@@ -105,9 +108,14 @@ func (f *Frame) drawSpace(count int) {
 }
 
 func (f *Frame) drawBottomBorder() {
+	switch f.border.(type) {
+	case *NoneBorder:
+		return
+	}
 	f.drawPrefix()
 	f.w.WriteString(f.border.Corner().leftBottom)
 	f.drawSplitter()
+	f.newLine()
 }
 
 func (f *Frame) drawHorizontalLine(count int) string {

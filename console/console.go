@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"sync"
 	"time"
 
 	"github.com/anqiansong/ketty"
@@ -22,7 +21,6 @@ var _ ketty.Logger = (*Console)(nil)
 type Console struct {
 	useColor bool
 	opt      []text.Option
-	once     sync.Once
 	output   string
 }
 
@@ -38,20 +36,16 @@ func NewConsole(opt ...Option) *Console {
 }
 
 func (c *Console) DisableColor() {
-	c.once.Do(func() {
-		c.useColor = false
-	})
+	c.useColor = false
 }
 
 func (c *Console) DisableBorder() {
-	c.once.Do(func() {
-		c.opt = append(c.opt, text.DisableBorder())
-	})
+	c.opt = append(c.opt, text.DisableBorder())
 }
 
 func (c *Console) Info(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
-	opt := []text.Option{text.WithPrefix("[INFO] ", time.Now().Format(dateFormat))}
+	opt := []text.Option{text.WithPrefix("[INFO] ", time.Now().Format(dateFormat)+" ")}
 	opt = append(opt, c.opt...)
 	output := text.Convert(msg, opt...)
 	if runtime.GOOS != "windows" && c.useColor {
@@ -62,7 +56,7 @@ func (c *Console) Info(format string, v ...interface{}) {
 
 func (c *Console) Debug(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
-	opt := []text.Option{text.WithPrefix("[DEBUG] ", time.Now().Format(dateFormat))}
+	opt := []text.Option{text.WithPrefix("[DEBUG] ", time.Now().Format(dateFormat)+" ")}
 	opt = append(opt, c.opt...)
 	output := text.Convert(msg, opt...)
 	if runtime.GOOS != "windows" && c.useColor {
@@ -73,7 +67,7 @@ func (c *Console) Debug(format string, v ...interface{}) {
 
 func (c *Console) Warn(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
-	opt := []text.Option{text.WithPrefix("[WARN] ", time.Now().Format(dateFormat))}
+	opt := []text.Option{text.WithPrefix("[WARN] ", time.Now().Format(dateFormat)+" ")}
 	opt = append(opt, c.opt...)
 	output := text.Convert(msg, opt...)
 	if runtime.GOOS != "windows" && c.useColor {
@@ -85,7 +79,7 @@ func (c *Console) Warn(format string, v ...interface{}) {
 func (c *Console) Error(err error) {
 	err = errors.WithStack(err)
 	msg := fmt.Sprintf("%+v", err)
-	opt := []text.Option{text.WithPrefix("[ERROR] ", time.Now().Format(dateFormat))}
+	opt := []text.Option{text.WithPrefix("[ERROR] ", time.Now().Format(dateFormat)+" ")}
 	opt = append(opt, c.opt...)
 	output := text.Convert(msg, opt...)
 	if runtime.GOOS != "windows" && c.useColor {
