@@ -15,35 +15,26 @@ import (
 
 const dateFormat = `2006-01-02 15:04:05.999`
 
-var colorConsole = NewConsole()
+type Option func(c *Console)
 
-func Info(format string, v ...interface{}) {
-	colorConsole.Info(format, v...)
-}
-
-func Debug(format string, v ...interface{}) {
-	colorConsole.Debug(format, v...)
-}
-
-func Warn(format string, v ...interface{}) {
-	colorConsole.Warn(format, v...)
-}
-
-func Error(err error) {
-	colorConsole.Error(err)
-}
+var _ ketty.Logger = (*Console)(nil)
 
 type Console struct {
 	useColor bool
 	opt      []text.Option
 	once     sync.Once
+	output   string
 }
 
-func NewConsole(opt ...text.Option) ketty.Logger {
-	return &Console{
-		opt:      opt,
+func NewConsole(opt ...Option) *Console {
+	c := &Console{
 		useColor: true,
 	}
+	for _, o := range opt {
+		o(c)
+	}
+
+	return c
 }
 
 func (c *Console) DisableColor() {
@@ -66,7 +57,7 @@ func (c *Console) Info(format string, v ...interface{}) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Green(output).String()
 	}
-	fmt.Fprintf(os.Stdout, output)
+	c.Fprintf(output)
 }
 
 func (c *Console) Debug(format string, v ...interface{}) {
@@ -77,7 +68,7 @@ func (c *Console) Debug(format string, v ...interface{}) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Blue(output).String()
 	}
-	fmt.Fprintf(os.Stdout, output)
+	c.Fprintf(output)
 }
 
 func (c *Console) Warn(format string, v ...interface{}) {
@@ -88,7 +79,7 @@ func (c *Console) Warn(format string, v ...interface{}) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Yellow(output).String()
 	}
-	fmt.Fprintf(os.Stdout, output)
+	c.Fprintf(output)
 }
 
 func (c *Console) Error(err error) {
@@ -100,5 +91,26 @@ func (c *Console) Error(err error) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Red(output).String()
 	}
-	fmt.Fprintf(os.Stderr, output)
+	c.Fprintf(output, true)
+}
+
+func (c *Console) Fprintf(msg string, err ...bool) {
+	if len(c.output) == 0 {
+		if len(err) > 0 && err[0] {
+			fmt.Fprint(os.Stderr, msg)
+		} else {
+			fmt.Fprint(os.Stdout, msg)
+		}
+		return
+	}
+
+	c.saveFile(msg, err...)
+}
+
+func (c *Console) saveFile(msg string, error ...bool) {
+	// TODO
+}
+
+func (c *Console) Rotate() error {
+	panic("implement me")
 }

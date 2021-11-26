@@ -5,4 +5,5 @@ type Logger interface {
 	Debug(format string, v ...interface{})
 	Warn(format string, v ...interface{})
 	Error(err error)
+	Rotate() error
 }
