@@ -29,6 +29,8 @@ import (
 	"unicode/utf8"
 )
 
+// Frame is a text render with options, such as render with
+// border, or with prefix.
 type Frame struct {
 	w        *bytes.Buffer
 	rows     []*Row
@@ -38,12 +40,14 @@ type Frame struct {
 	prefix   []string
 }
 
+// Convert converts a plain text into another text with options.
 func Convert(text string, opt ...Option) string {
 	f := NewFrame(NewRows(text), opt...)
 	f.draw()
 	return f.w.String()
 }
 
+// NewFrame creates an instance of Frame.
 func NewFrame(rows []*Row, opt ...Option) *Frame {
 	f := &Frame{}
 	options := []Option{WithLineStyle()}
@@ -170,6 +174,7 @@ func (f *Frame) newLine() {
 	f.w.WriteRune('\n')
 }
 
+// Print prints a text on terminal.
 func (f *Frame) Print() {
 	f.draw()
 	fmt.Println(f.w.String())

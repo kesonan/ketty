@@ -22,28 +22,35 @@
 
 package console
 
+// DisableColor sets the color flag as false, if it is,
+// the Console won't print log with color.
 func DisableColor() {
 	colorConsole.DisableColor()
 }
 
+// DisableBorder prints log with borderless.
 func DisableBorder() {
 	colorConsole.DisableBorder()
 }
 
 var colorConsole = NewConsole()
 
+// Info prints info level log.
 func Info(format string, v ...interface{}) {
 	colorConsole.Info(format, v...)
 }
 
+// Debug prints debug level log.
 func Debug(format string, v ...interface{}) {
 	colorConsole.Debug(format, v...)
 }
 
+// Warn prints warn level log.
 func Warn(format string, v ...interface{}) {
 	colorConsole.Warn(format, v...)
 }
 
+// Error prints error level log.
 func Error(err error) {
 	colorConsole.Error(err)
 }

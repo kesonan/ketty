@@ -36,10 +36,12 @@ import (
 
 const dateFormat = `2006-01-02 15:04:05.999`
 
+// Option is an alias of the function with argument Console.
 type Option func(c *Console)
 
 var _ ketty.Logger = (*Console)(nil)
 
+// Console is log printer which implements Logger.
 type Console struct {
 	useColor bool
 	opt      []text.Option
@@ -47,6 +49,7 @@ type Console struct {
 	testTime string
 }
 
+// NewConsole creates an instance of Console.
 func NewConsole(opt ...Option) *Console {
 	c := &Console{
 		useColor: true,
@@ -58,10 +61,13 @@ func NewConsole(opt ...Option) *Console {
 	return c
 }
 
+// DisableColor sets the color flag as false, if it is,
+// the Console won't print log with color.
 func (c *Console) DisableColor() {
 	c.useColor = false
 }
 
+// DisableBorder prints log with borderless.
 func (c *Console) DisableBorder() {
 	c.opt = append(c.opt, text.DisableBorder())
 }
@@ -78,6 +84,7 @@ func (c *Console) now() string {
 	return now
 }
 
+// Info prints info level log.
 func (c *Console) Info(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
 	opt := []text.Option{text.WithPrefix("[INFO] ", c.now())}
@@ -86,9 +93,10 @@ func (c *Console) Info(format string, v ...interface{}) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Green(output).String()
 	}
-	c.Fprintf(output)
+	c.fPrintf(output)
 }
 
+// Debug prints debug level log.
 func (c *Console) Debug(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
 	opt := []text.Option{text.WithPrefix("[DEBUG] ", c.now())}
@@ -97,9 +105,10 @@ func (c *Console) Debug(format string, v ...interface{}) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Blue(output).String()
 	}
-	c.Fprintf(output)
+	c.fPrintf(output)
 }
 
+// Warn prints warn level log.
 func (c *Console) Warn(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
 	opt := []text.Option{text.WithPrefix("[WARN] ", c.now())}
@@ -108,9 +117,10 @@ func (c *Console) Warn(format string, v ...interface{}) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Yellow(output).String()
 	}
-	c.Fprintf(output)
+	c.fPrintf(output)
 }
 
+// Error prints error level log.
 func (c *Console) Error(err error) {
 	err = errors.WithStack(err)
 	msg := fmt.Sprintf("%+v", err)
@@ -120,10 +130,10 @@ func (c *Console) Error(err error) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Red(output).String()
 	}
-	c.Fprintf(output, true)
+	c.fPrintf(output, true)
 }
 
-func (c *Console) Fprintf(msg string, err ...bool) {
+func (c *Console) fPrintf(msg string, err ...bool) {
 	if len(c.output) == 0 {
 		if len(err) > 0 && err[0] {
 			fmt.Fprint(os.Stderr, msg)
@@ -140,6 +150,7 @@ func (c *Console) saveFile(msg string, error ...bool) {
 	// TODO
 }
 
+// Rotate makes a new log file in interval.
 func (c *Console) Rotate() error {
 	panic("implement me")
 }

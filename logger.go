@@ -22,6 +22,8 @@
 
 package ketty
 
+// Logger describes a log printer which contains Info,
+// Debug, Warn, Error, Rotate method.
 type Logger interface {
 	Info(format string, v ...interface{})
 	Debug(format string, v ...interface{})

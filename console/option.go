@@ -26,12 +26,14 @@ import (
 	"github.com/anqiansong/ketty/text"
 )
 
+// WithTextOption returns an Option wrapped text.Option.
 func WithTextOption(opt ...text.Option) Option {
 	return func(c *Console) {
 		c.opt = opt
 	}
 }
 
+// WithOutputDir sets an output file for Logger.
 func WithOutputDir(file string) Option {
 	return func(c *Console) {
 		c.output = file

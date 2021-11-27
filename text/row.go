@@ -27,11 +27,13 @@ import (
 	"unicode/utf8"
 )
 
+// Row describes a log row.
 type Row struct {
 	lineText  []string
 	maxLength int
 }
 
+// NewRows creates an instance of Row.
 func NewRows(text ...string) []*Row {
 	var list []*Row
 	for _, t := range text {

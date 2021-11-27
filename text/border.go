@@ -22,70 +22,87 @@
 
 package text
 
+// Corner describes the character for left side corner.
 type Corner struct {
 	leftTop    string
 	leftBottom string
 }
 
+// LineSplitter describes the splitter in horizontal and vertica direction.
 type LineSplitter struct {
 	horizontalLine string
 	verticalLine   string
 }
 
+// BorderStyle is an interface which describes a border style
+// for log print.
 type BorderStyle interface {
 	Corner() Corner
 	LineSplitter() LineSplitter
 }
 
+// Border implements BorderStyle to receive a border style.
 type Border struct {
 	c Corner
 	l LineSplitter
 }
 
+// Corner is the corner of border.
 func (b *Border) Corner() Corner {
 	return b.c
 }
 
+// LineSplitter describes a line splitter in horizontal and vertical.
 func (b *Border) LineSplitter() LineSplitter {
 	return b.l
 }
 
+// NoneBorder implements BorderStyle represents borderless.
 type NoneBorder struct{}
 
+// Corner is the corner of border.
 func (b *NoneBorder) Corner() Corner {
 	return Corner{}
 }
 
+// LineSplitter describes a line splitter in horizontal and vertical.
 func (b *NoneBorder) LineSplitter() LineSplitter {
 	return LineSplitter{}
 }
 
+// WithLineStyle describes a line style for border.
 func WithLineStyle() Option {
 	return WithBorder("┌", "└", "─", "│")
 }
 
+// WithDotStyle describes a dot style for border.
 func WithDotStyle() Option {
 	return WithCommonBorder(".")
 }
 
+// WithStarStyle describes a star style for border.
 func WithStarStyle() Option {
 	return WithCommonBorder("*")
 }
 
+// WithPlusStyle describes a plus style for border.
 func WithPlusStyle() Option {
 	return WithBorder("+", "+", "-", "|")
 }
 
+// DisableBorder represents that is disable border.
 func DisableBorder() Option {
 	return func(f *Frame) {
 		f.border = &NoneBorder{}
 	}
 }
 
+// WithFivePointedStarStyle describes a file-pointed star style for border.
 func WithFivePointedStarStyle() Option {
 	return WithCommonBorder("★")
 }
 
+// WithDoubleLine describes a double line style for border.
 func WithDoubleLine() Option {
 	return WithBorder("╔", "╚", "═", "║")
 }

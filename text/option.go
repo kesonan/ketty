@@ -22,8 +22,10 @@
 
 package text
 
+// Option is an alias of the function with argument Frame .
 type Option func(f *Frame)
 
+// WithBorder creates an Option from arguments.
 func WithBorder(leftTop, leftBottom, horizontal, vertical string) Option {
 	border := &Border{
 		c: Corner{
@@ -40,6 +42,7 @@ func WithBorder(leftTop, leftBottom, horizontal, vertical string) Option {
 	}
 }
 
+// WithCommonBorder creates a Border Option which have the same character.
 func WithCommonBorder(char string) Option {
 	border := &Border{
 		c: Corner{
@@ -56,6 +59,7 @@ func WithCommonBorder(char string) Option {
 	}
 }
 
+// WithPrefix creates a prefix Option.
 func WithPrefix(prefix ...string) Option {
 	return func(f *Frame) {
 		f.prefix = prefix
