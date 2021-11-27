@@ -22,41 +22,55 @@
  * SOFTWARE.
  */
 
-package main
+package console
 
 import (
-	"github.com/anqiansong/ketty/console"
-	"github.com/anqiansong/ketty/text"
+	"errors"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func main() {
-	// 快速开始
-	// 	console.Info(`
-	// {
-	//     "name":"Hello Ketty",
-	//     "description":"a color logger",
-	//     "author":"anqiansong",
-	//     "category":"console",
-	//     "github":"https://github.com/anqiansong/ketty",
-	//     "useage":[
-	//         "info",
-	//         "debug"
-	//     ]
-	// }`)
-	// 	console.Debug("Hello Ketty")
-	// 	console.Warn("Hello Ketty")
-	// 	console.Error(errors.New("error test"))
+func TestDisableColor(t *testing.T) {
+	DisableColor()
+	assert.False(t, colorConsole.useColor)
+}
 
-	// 直接使用
-	// console.Info("Hello ketty, This is info log")
-	// console.Debug("Hello ketty, This debug log")
-	// console.Warn("Hello ketty, This warn log")
-	// console.Error(errors.New("Hello ketty,This is an error"))
+func ExampleDisableBorder() {
+	DisableBorder()
+	DisableColor()
+	colorConsole.useTestTime("2021-11-27")
+	Info("hello ketty")
+	// Output:
+	// [INFO] 2021-11-27 hello ketty
+}
 
-	// 初始化
-	plusStyle := text.WithBorder("=","=","-","|")
-	c := console.NewConsole(console.WithTextOption(plusStyle))
-	// c.DisableBorder()
-	// c.DisableColor()
-	c.Info("Hello Ketty")
+func ExampleInfo() {
+	DisableColor()
+	colorConsole.useTestTime("2021-11-27")
+	Info("hello ketty")
+	// Output:
+	// [INFO] 2021-11-27 hello ketty
+}
+
+func ExampleDebug() {
+	DisableColor()
+	colorConsole.useTestTime("2021-11-27")
+	Debug("hello ketty")
+	// Output:
+	// [DEBUG] 2021-11-27 hello ketty
+}
+
+func ExampleWarn() {
+	DisableColor()
+	colorConsole.useTestTime("2021-11-27")
+	Warn("hello ketty")
+	// Output:
+	// [WARN] 2021-11-27 hello ketty
+}
+
+func Test_Error(t *testing.T) {
+	DisableColor()
+	colorConsole.useTestTime("2021-11-27")
+	Error(errors.New("hello ketty"))
 }

@@ -119,7 +119,18 @@ func (f *Frame) drawText(texts []string) {
 	for _, item := range texts {
 		f.drawPrefix()
 		f.w.WriteString(f.border.LineSplitter().verticalLine)
-		f.w.WriteString("  " + item)
+		switch f.border.(type) {
+		case *NoneBorder:
+			if len(f.prefix) > 0 {
+				f.w.WriteString(" " + item)
+			} else {
+				f.w.WriteString(item)
+			}
+		default:
+			f.w.WriteString("  " + item)
+
+		}
+
 		f.drawSpace(f.maxWidth - len(item))
 		f.newLine()
 	}

@@ -26,6 +26,8 @@ package text
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewRow(t *testing.T) {
@@ -34,6 +36,34 @@ func TestNewRow(t *testing.T) {
 	"age": 20,
 	"gender": "男"
 }`)
-	f := NewFrame(rows, WithPrefix("[INFO] ","2021-11-26 16:11 "), DisableBorder())
+	f := NewFrame(rows, WithPrefix("[INFO] ", "2021-11-26 16:11 "), DisableBorder())
 	f.Print()
+}
+
+func TestConvert(t *testing.T) {
+	actual := Convert("hello ketty", DisableBorder())
+	assert.Equal(t, "hello ketty\n", actual)
+}
+
+func Test_draw(t *testing.T) {
+	f:=NewFrame(NewRows("hello ketty"))
+	t.Run("drawSplitter", func(t *testing.T) {
+		f.drawSplitter()
+	})
+
+	t.Run("drawRowSplitter", func(t *testing.T) {
+		f.drawRowSplitter()
+	})
+
+	t.Run("drawText", func(t *testing.T) {
+		f.drawText([]string{})
+	})
+
+	t.Run("drawPrefix", func(t *testing.T) {
+		f.drawPrefix()
+	})
+
+	t.Run("drawHorizontalLine", func(t *testing.T) {
+		f.drawHorizontalLine(0)
+	})
 }
