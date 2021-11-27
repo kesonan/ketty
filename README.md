@@ -52,9 +52,9 @@ func main(){
 
 ```go
 func main(){
-    console.Info("Hello ketty, This is info log")
-    console.Debug("Hello ketty, This debug log")
-    console.Warn("Hello ketty, This warn log")
+    console.Info("Hello ketty, This is a info log")
+    console.Debug("Hello ketty, This is a debug log")
+    console.Warn("Hello ketty, This is a warn log")
     console.Error(errors.New("Hello ketty,This is an error"))
 }
 ```
