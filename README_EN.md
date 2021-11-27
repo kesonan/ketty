@@ -1,4 +1,9 @@
 # Ketty
+[![Go](https://github.com/anqiansong/ketty/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/anqiansong/ketty/actions/workflows/go.yml)
+[![codecov](https://codecov.io/gh/anqiansong/ketty/branch/main/graph/badge.svg?token=KAMZX9OEYF)](https://codecov.io/gh/anqiansong/ketty)
+[![Go Report Card](https://goreportcard.com/badge/github.com/anqiansong/ketty)](https://goreportcard.com/report/github.com/anqiansong/ketty)
+[![License](https://img.shields.io/github/license/anqiansong/ketty)](https://github.com/anqiansong/ketty/blob/main/LICENSE)
+
 
 [中文](README.md)|English
 

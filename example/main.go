@@ -54,7 +54,7 @@ func main() {
 	// console.Error(errors.New("Hello ketty,This is an error"))
 
 	// 初始化
-	plusStyle := text.WithBorder("=","=","-","|")
+	plusStyle := text.WithBorder("=", "=", "-", "|")
 	c := console.NewConsole(console.WithTextOption(plusStyle))
 	// c.DisableBorder()
 	// c.DisableColor()
