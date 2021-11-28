@@ -29,5 +29,6 @@ type Logger interface {
 	Debug(format string, v ...interface{})
 	Warn(format string, v ...interface{})
 	Error(err error)
+	ErrorText(format string, v ...interface{})
 	Rotate() error
 }

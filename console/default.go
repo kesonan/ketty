@@ -28,6 +28,16 @@ func DisableColor() {
 	colorConsole.DisableColor()
 }
 
+// DisablePrefix prints log without prefix
+func DisablePrefix() {
+	colorConsole.DisablePrefix()
+}
+
+// UsePrefix add a prefix to logger.
+func UsePrefix(prefix string) {
+	colorConsole.prefix = prefix
+}
+
 // DisableBorder prints log with borderless.
 func DisableBorder() {
 	colorConsole.DisableBorder()
@@ -53,4 +63,9 @@ func Warn(format string, v ...interface{}) {
 // Error prints error level log.
 func Error(err error) {
 	colorConsole.Error(err)
+}
+
+// ErrorText prints error level log.
+func ErrorText(format string, v ...interface{}) {
+	colorConsole.ErrorText(format, v...)
 }

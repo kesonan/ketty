@@ -39,3 +39,10 @@ func WithOutputDir(file string) Option {
 		c.output = file
 	}
 }
+
+// WithPrefix sets a prefix for Logger.
+func WithPrefix(prefix string) Option {
+	return func(c *Console) {
+		c.prefix = prefix
+	}
+}

@@ -43,10 +43,12 @@ var _ ketty.Logger = (*Console)(nil)
 
 // Console is log printer which implements Logger.
 type Console struct {
-	useColor bool
-	opt      []text.Option
-	output   string
-	testTime string
+	useColor  bool
+	usePrefix bool
+	opt       []text.Option
+	output    string
+	testTime  string
+	prefix    string
 }
 
 // NewConsole creates an instance of Console.
@@ -65,6 +67,11 @@ func NewConsole(opt ...Option) *Console {
 // the Console won't print log with color.
 func (c *Console) DisableColor() {
 	c.useColor = false
+}
+
+// DisablePrefix prints log without prefix
+func (c *Console) DisablePrefix() {
+	c.usePrefix = false
 }
 
 // DisableBorder prints log with borderless.
@@ -87,7 +94,14 @@ func (c *Console) now() string {
 // Info prints info level log.
 func (c *Console) Info(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
-	opt := []text.Option{text.WithPrefix("[INFO] ", c.now())}
+	var opt []text.Option
+	if c.usePrefix {
+		if len(c.prefix) > 0 {
+			opt = []text.Option{text.WithPrefix(c.prefix)}
+		} else {
+			opt = []text.Option{text.WithPrefix("[INFO] ", c.now())}
+		}
+	}
 	opt = append(opt, c.opt...)
 	output := text.Convert(msg, opt...)
 	if runtime.GOOS != "windows" && c.useColor {
@@ -99,7 +113,14 @@ func (c *Console) Info(format string, v ...interface{}) {
 // Debug prints debug level log.
 func (c *Console) Debug(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
-	opt := []text.Option{text.WithPrefix("[DEBUG] ", c.now())}
+	var opt []text.Option
+	if c.usePrefix {
+		if len(c.prefix) > 0 {
+			opt = []text.Option{text.WithPrefix(c.prefix)}
+		} else {
+			opt = []text.Option{text.WithPrefix("[DEBUG] ", c.now())}
+		}
+	}
 	opt = append(opt, c.opt...)
 	output := text.Convert(msg, opt...)
 	if runtime.GOOS != "windows" && c.useColor {
@@ -111,7 +132,14 @@ func (c *Console) Debug(format string, v ...interface{}) {
 // Warn prints warn level log.
 func (c *Console) Warn(format string, v ...interface{}) {
 	msg := fmt.Sprintf(format, v...)
-	opt := []text.Option{text.WithPrefix("[WARN] ", c.now())}
+	var opt []text.Option
+	if c.usePrefix {
+		if len(c.prefix) > 0 {
+			opt = []text.Option{text.WithPrefix(c.prefix)}
+		} else {
+			opt = []text.Option{text.WithPrefix("[WARN] ", c.now())}
+		}
+	}
 	opt = append(opt, c.opt...)
 	output := text.Convert(msg, opt...)
 	if runtime.GOOS != "windows" && c.useColor {
@@ -124,7 +152,33 @@ func (c *Console) Warn(format string, v ...interface{}) {
 func (c *Console) Error(err error) {
 	err = errors.WithStack(err)
 	msg := fmt.Sprintf("%+v", err)
-	opt := []text.Option{text.WithPrefix("[ERROR] ", c.now())}
+	var opt []text.Option
+	if c.usePrefix {
+		if len(c.prefix) > 0 {
+			opt = []text.Option{text.WithPrefix(c.prefix)}
+		} else {
+			opt = []text.Option{text.WithPrefix("[ERROR] ", c.now())}
+		}
+	}
+	opt = append(opt, c.opt...)
+	output := text.Convert(msg, opt...)
+	if runtime.GOOS != "windows" && c.useColor {
+		output = aurora.Red(output).String()
+	}
+	c.fPrintf(output, true)
+}
+
+// ErrorText prints error level log.
+func (c *Console) ErrorText(format string, v ...interface{}) {
+	msg := fmt.Sprintf(format, v...)
+	var opt []text.Option
+	if c.usePrefix {
+		if len(c.prefix) > 0 {
+			opt = []text.Option{text.WithPrefix(c.prefix)}
+		} else {
+			opt = []text.Option{text.WithPrefix("[ERROR] ", c.now())}
+		}
+	}
 	opt = append(opt, c.opt...)
 	output := text.Convert(msg, opt...)
 	if runtime.GOOS != "windows" && c.useColor {
