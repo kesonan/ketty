@@ -67,6 +67,22 @@ func ExampleWarn() {
 	// [WARN] 2021-11-27 hello ketty
 }
 
+func ExampleErrorText() {
+	DisableColor()
+	DisablePrefix()
+	DisableBorder()
+	ErrorText("hello ketty")
+	// Output:
+	// hello ketty
+}
+
+func Test_WithPrefix(t *testing.T) {
+	DisableColor()
+	DisableBorder()
+	WithPrefix("test")
+
+}
+
 func Test_Error(t *testing.T) {
 	DisableColor()
 	colorConsole.useTestTime("2021-11-27")

@@ -58,6 +58,16 @@ func ExampleConsole_DisableBorder() {
 	// [INFO] 2021-11-27 hello ketty
 }
 
+func ExampleConsole_DisablePrefix() {
+	c := NewConsole()
+	c.DisableBorder()
+	c.DisableColor()
+	c.DisablePrefix()
+	c.Info("hello ketty")
+	// Output:
+	// hello ketty
+}
+
 func ExampleConsole_Info() {
 	c := NewConsole()
 	c.DisableColor()
@@ -96,4 +106,24 @@ func TestConsole_Error(t *testing.T) {
 	c.DisableColor()
 	c.useTestTime("2021-11-27")
 	c.Error(errors.New("hello ketty"))
+}
+
+func ExampleConsole_ErrorText() {
+	c := NewConsole()
+	c.DisableColor()
+	c.DisablePrefix()
+	c.DisableBorder()
+	c.ErrorText("hello ketty")
+	// output:
+	// hello ketty
+}
+
+func ExampleUsePrefix() {
+	c := NewConsole()
+	c.prefix = "test"
+	c.DisableBorder()
+	c.DisableColor()
+	c.Info("hello ketty")
+	// output:
+	// test hello ketty
 }

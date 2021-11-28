@@ -54,7 +54,8 @@ type Console struct {
 // NewConsole creates an instance of Console.
 func NewConsole(opt ...Option) *Console {
 	c := &Console{
-		useColor: true,
+		useColor:  true,
+		usePrefix: true,
 	}
 	for _, o := range opt {
 		o(c)
@@ -184,7 +185,7 @@ func (c *Console) ErrorText(format string, v ...interface{}) {
 	if runtime.GOOS != "windows" && c.useColor {
 		output = aurora.Red(output).String()
 	}
-	c.fPrintf(output, true)
+	c.fPrintf(output)
 }
 
 func (c *Console) fPrintf(msg string, err ...bool) {
