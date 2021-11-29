@@ -26,6 +26,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/anqiansong/ketty"
@@ -113,6 +114,11 @@ func (c *Console) Info(format string, v ...interface{}) {
 
 // Debug prints debug level log.
 func (c *Console) Debug(format string, v ...interface{}) {
+	env := os.Getenv(debugKey)
+	if strings.EqualFold(env, "false") {
+		return
+	}
+
 	msg := fmt.Sprintf(format, v...)
 	var opt []text.Option
 	if c.usePrefix {

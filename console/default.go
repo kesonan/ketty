@@ -22,6 +22,19 @@
 
 package console
 
+import "os"
+
+const debugKey = "KETTY_DEBUG"
+
+func init() {
+	os.Setenv(debugKey, "true")
+}
+
+// DisableDebug set debug env to false.
+func DisableDebug() {
+	os.Setenv(debugKey, "false")
+}
+
 // DisableColor sets the color flag as false, if it is,
 // the Console won't print log with color.
 func DisableColor() {

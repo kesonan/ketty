@@ -24,6 +24,7 @@ package console
 
 import (
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -87,4 +88,9 @@ func Test_Error(t *testing.T) {
 	DisableColor()
 	colorConsole.useTestTime("2021-11-27")
 	Error(errors.New("hello ketty"))
+}
+
+func TestDisableDebug(t *testing.T) {
+	DisableDebug()
+	assert.Equal(t, "false", os.Getenv(debugKey))
 }
