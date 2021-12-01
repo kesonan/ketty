@@ -212,6 +212,14 @@ func (c *Console) fPrintf(msg string, err ...bool) {
 	_, _ = fmt.Fprint(c.w, msg)
 }
 
+// Use sets Option into Console.
+func (c *Console) Use(opt ...Option) {
+	for _, o := range opt {
+		o(c)
+	}
+}
+
+// Flush saves the buffered data on disk file.
 func (c *Console) Flush() error {
 	if c.w == nil {
 		return nil
@@ -228,6 +236,7 @@ func (c *Console) rotate() error {
 	panic("implement me")
 }
 
+// Close for cleaning up.
 func (c *Console) Close() {
 	c.once.Do(func() {
 		_ = c.Flush()

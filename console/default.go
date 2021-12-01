@@ -35,6 +35,10 @@ func DisablePrefix() {
 	colorConsole.DisablePrefix()
 }
 
+func SetOutput(dir string) {
+	colorConsole.Use(WithOutputDir(dir))
+}
+
 // UsePrefix add a prefix to logger.
 func UsePrefix(prefix string) {
 	colorConsole.prefix = prefix
