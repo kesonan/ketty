@@ -16,6 +16,8 @@ $ go install github.com/anqiansong/ketty@latest
 ```
 
 ## Quick Start
+The default console is output to the console, if you need to store the file to disk, 
+please refer to Log `Persistence` below
 
 ```go
 func main(){
@@ -156,7 +158,24 @@ plusStyle := text.WithCommonBorder("x")
 ```
 
 ## Persistence
-TODO
+You can specify a log output directory with `WithOutputDir` and force the logs to disk with `Flush`, by default ketty 
+will automatically go to Flush once every second.
+
+```go
+c := NewConsole(WithOutputDir(dir))
+// Don't forget to close it, otherwise the goroutine maybe overflow
+defer c.Close()
+// To prevent the log file from growing dramatically, you can turn off color 
+// and border beautification to reduce unnecessary log output to the file
+c.DisableColor()
+c.DisableBorder()
+c.Info("It's now: %v", time.Now())
+
+// Manually drop the tray
+c.Flush()
+```
+
+Translated with www.DeepL.com/Translator (free version)
 
 ## Notes
 The colorful output does not support on Windows.

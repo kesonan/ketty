@@ -23,6 +23,11 @@
 package console
 
 import (
+	"bufio"
+	"os"
+	"path/filepath"
+	"time"
+
 	"github.com/anqiansong/ketty/text"
 )
 
@@ -36,7 +41,33 @@ func WithTextOption(opt ...text.Option) Option {
 // WithOutputDir sets an output file for Logger.
 func WithOutputDir(file string) Option {
 	return func(c *Console) {
+		c.lock.Lock()
+		defer c.lock.Unlock()
+		if len(file) == 0 {
+			return
+		}
+		info, err := os.Stat(file)
+		if err != nil && os.IsNotExist(err) {
+			err = os.MkdirAll(file, os.ModePerm)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			if !info.IsDir() {
+				panic("invalid dir: " + file)
+			}
+		}
+
 		c.output = file
+		filename := filepath.Join(c.output, "access.log")
+		f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+		if err != nil {
+			panic(err)
+		}
+		c.w = bufio.NewWriter(f)
+		c.ticker = time.NewTicker(time.Second)
+		c.doneChan = make(chan struct{})
+		go c.listenFile()
 	}
 }
 

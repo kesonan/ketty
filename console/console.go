@@ -23,10 +23,12 @@
 package console
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/anqiansong/ketty"
@@ -50,6 +52,11 @@ type Console struct {
 	output    string
 	testTime  string
 	prefix    string
+	w         *bufio.Writer
+	ticker    *time.Ticker
+	lock      sync.Mutex
+	once      sync.Once
+	doneChan  chan struct{}
 }
 
 // NewConsole creates an instance of Console.
@@ -61,7 +68,6 @@ func NewConsole(opt ...Option) *Console {
 	for _, o := range opt {
 		o(c)
 	}
-
 	return c
 }
 
@@ -195,23 +201,54 @@ func (c *Console) ErrorText(format string, v ...interface{}) {
 }
 
 func (c *Console) fPrintf(msg string, err ...bool) {
-	if len(c.output) == 0 {
+	if c.w == nil {
 		if len(err) > 0 && err[0] {
-			fmt.Fprint(os.Stderr, msg)
+			_, _ = fmt.Fprint(os.Stderr, msg)
 		} else {
-			fmt.Fprint(os.Stdout, msg)
+			_, _ = fmt.Fprint(os.Stdout, msg)
 		}
 		return
 	}
-
-	c.saveFile(msg, err...)
+	_, _ = fmt.Fprint(c.w, msg)
 }
 
-func (c *Console) saveFile(msg string, error ...bool) {
-	// TODO
+func (c *Console) Flush() error {
+	if c.w == nil {
+		return nil
+	}
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	fmt.Println(time.Now())
+	fmt.Println(c.w.Buffered())
+	return c.w.Flush()
 }
 
-// Rotate makes a new log file in interval.
-func (c *Console) Rotate() error {
+// rotate makes a new log file in interval.
+func (c *Console) rotate() error {
 	panic("implement me")
+}
+
+func (c *Console) Close() {
+	c.once.Do(func() {
+		_ = c.Flush()
+		if c.ticker != nil {
+			c.ticker.Stop()
+		}
+		if c.doneChan != nil {
+			close(c.doneChan)
+		}
+	})
+}
+
+func (c *Console) listenFile() {
+	for {
+		select {
+		case <-c.ticker.C:
+			_ = c.Flush()
+		case <-c.doneChan:
+			return
+		default:
+
+		}
+	}
 }

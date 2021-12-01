@@ -37,8 +37,12 @@ func TestNewConsole(t *testing.T) {
 	})
 
 	t.Run("withOption", func(t *testing.T) {
-		c := NewConsole(WithOutputDir("foo"))
-		assert.Equal(t, "foo", c.output)
+		dir := t.TempDir()
+		c := NewConsole(WithOutputDir(dir))
+		defer c.Close()
+		c.DisableColor()
+		c.DisableBorder()
+		assert.Equal(t, dir, c.output)
 	})
 }
 
