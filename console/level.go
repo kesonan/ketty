@@ -26,9 +26,9 @@ type Level int
 
 const (
 	_ Level = iota << 1
-	LevelDebug
-	LevelInfo
-	LevelWarn
-	LevelError
 	LevelDisable
+	LevelError
+	LevelWarn
+	LevelInfo
+	LevelDebug
 )

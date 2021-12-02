@@ -64,6 +64,7 @@ func NewConsole(opt ...Option) *Console {
 	c := &Console{
 		useColor:  true,
 		usePrefix: true,
+		level:     LevelDebug,
 	}
 	for _, o := range opt {
 		o(c)
