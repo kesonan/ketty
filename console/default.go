@@ -22,8 +22,6 @@
 
 package console
 
-const debugKey = "KETTY_DEBUG"
-
 // DisableColor sets the color flag as false, if it is,
 // the Console won't print log with color.
 func DisableColor() {
@@ -45,13 +43,18 @@ func UsePrefix(prefix string) {
 }
 
 // Close for cleaning up.
-func Close()  {
+func Close() {
 	colorConsole.Close()
 }
 
 // DisableBorder prints log with borderless.
 func DisableBorder() {
 	colorConsole.DisableBorder()
+}
+
+// GetConsole returns a Console instance.
+func GetConsole() *Console {
+	return colorConsole
 }
 
 var colorConsole = NewConsole()

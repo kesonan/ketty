@@ -27,7 +27,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"strings"
 	"sync"
 	"time"
 
@@ -57,6 +56,7 @@ type Console struct {
 	lock      sync.Mutex
 	once      sync.Once
 	doneChan  chan struct{}
+	level     Level
 }
 
 // NewConsole creates an instance of Console.
@@ -91,6 +91,16 @@ func (c *Console) useTestTime(t string) {
 	c.testTime = t
 }
 
+// SetLevel set log level.
+func (c *Console) SetLevel(level Level) {
+	c.level = level
+}
+
+// Disable prevent log to output.
+func (c *Console) Disable() {
+	c.level = LevelDisable
+}
+
 func (c *Console) now() string {
 	now := time.Now().Format(dateFormat)
 	if len(c.testTime) > 0 {
@@ -101,6 +111,9 @@ func (c *Console) now() string {
 
 // Info prints info level log.
 func (c *Console) Info(format string, v ...interface{}) {
+	if c.level < LevelInfo {
+		return
+	}
 	msg := fmt.Sprintf(format, v...)
 	var opt []text.Option
 	if c.usePrefix {
@@ -120,11 +133,9 @@ func (c *Console) Info(format string, v ...interface{}) {
 
 // Debug prints debug level log.
 func (c *Console) Debug(format string, v ...interface{}) {
-	env := os.Getenv(debugKey)
-	if strings.EqualFold(env, "false") {
+	if c.level < LevelDebug {
 		return
 	}
-
 	msg := fmt.Sprintf(format, v...)
 	var opt []text.Option
 	if c.usePrefix {
@@ -144,6 +155,9 @@ func (c *Console) Debug(format string, v ...interface{}) {
 
 // Warn prints warn level log.
 func (c *Console) Warn(format string, v ...interface{}) {
+	if c.level < LevelWarn {
+		return
+	}
 	msg := fmt.Sprintf(format, v...)
 	var opt []text.Option
 	if c.usePrefix {
@@ -163,6 +177,9 @@ func (c *Console) Warn(format string, v ...interface{}) {
 
 // Error prints error level log.
 func (c *Console) Error(err error) {
+	if c.level < LevelError {
+		return
+	}
 	err = errors.WithStack(err)
 	msg := fmt.Sprintf("%+v", err)
 	var opt []text.Option
@@ -183,6 +200,9 @@ func (c *Console) Error(err error) {
 
 // ErrorText prints error level log.
 func (c *Console) ErrorText(format string, v ...interface{}) {
+	if c.level < LevelError {
+		return
+	}
 	msg := fmt.Sprintf(format, v...)
 	var opt []text.Option
 	if c.usePrefix {
@@ -226,8 +246,6 @@ func (c *Console) Flush() error {
 	}
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	fmt.Println(time.Now())
-	fmt.Println(c.w.Buffered())
 	return c.w.Flush()
 }
 
