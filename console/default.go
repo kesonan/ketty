@@ -44,6 +44,11 @@ func UsePrefix(prefix string) {
 	colorConsole.prefix = prefix
 }
 
+// Close for cleaning up.
+func Close()  {
+	colorConsole.Close()
+}
+
 // DisableBorder prints log with borderless.
 func DisableBorder() {
 	colorConsole.DisableBorder()
